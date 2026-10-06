@@ -2,10 +2,10 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KawanAngka V2 - Almazaya Islamic School (Matematika Adaptif Level 2)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kuis Matematika Kontekstual - Almazaya Islamic School</title>
   
-  <!-- Tailwind CSS & Google Fonts & Font Awesome -->
+  <!-- Tailwind CSS & Fonts & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -27,7 +27,7 @@
               purple: '#8b5cf6',
               rose: '#f43f5e',
               indigo: '#6366f1',
-              softBg: '#f8fafc',
+              emerald: '#10b981',
             }
           },
           animation: {
@@ -56,220 +56,210 @@
   </script>
   
   <style>
-    body {
+    * {
+      touch-action: manipulation;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: manipulation;
-      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
     }
-    
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
+      min-height: 100vh;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+    }
     .interactive-canvas {
       touch-action: none;
       cursor: crosshair;
     }
-
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-
     /* Confetti animation */
     .confetti {
-      position: absolute;
+      position: fixed;
       width: 10px;
       height: 10px;
       background-color: #f59e0b;
-      opacity: 0.8;
-      animation: confettiFall 2.5s ease-out forwards;
+      opacity: 0.9;
+      animation: confettiFall 2.8s ease-out forwards;
       pointer-events: none;
-      z-index: 60;
+      z-index: 99;
     }
     @keyframes confettiFall {
-      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(650px) rotate(720deg); opacity: 0; }
-    }
-
-    /* Balance scale animations */
-    .scale-arm {
-      transition: transform 0.5s ease-out;
-      transform-origin: center center;
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
   </style>
 </head>
 
-<body class="min-h-screen font-sans text-slate-800 flex justify-center items-center p-0 sm:p-4 md:p-6 select-none">
+<body class="font-sans text-slate-800 flex justify-center items-center p-0 sm:p-3 md:p-6 select-none">
 
-  <!-- MAIN APP WRAPPER (TOGGLEABLE MOBILE / TABLET MODE) -->
-  <div id="app" class="w-full max-w-md bg-white min-h-screen sm:min-h-[860px] sm:max-h-[920px] sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-[8px] border-slate-800 transition-all duration-300">
+  <!-- MAIN APP WRAPPER (RESPONSIVE FLUID CONTAINER FOR BOTH PORTRAIT & LANDSCAPE) -->
+  <div id="appContainer" class="w-full max-w-5xl bg-slate-900/90 backdrop-blur-xl min-h-screen sm:min-h-[700px] sm:max-h-[95vh] sm:rounded-3xl shadow-2xl flex flex-col border-0 sm:border-4 border-slate-700/60 overflow-hidden relative transition-all duration-300">
     
-    <!-- TOP HEADER -->
-    <header id="topHeader" class="bg-white px-5 pt-4 pb-3 flex flex-col border-b border-slate-100 z-10 sticky top-0 gap-2">
-      <!-- SCHOOL BRANDING, VIEW MODE & TEACHER TAG -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 text-[10px] sm:text-xs font-extrabold px-3 py-1 rounded-full border border-emerald-200 shadow-sm">
-          <i class="fa-solid fa-school text-emerald-600"></i>
-          <span>ALMAZAYA ISLAMIC SCHOOL</span>
-          <span class="text-emerald-400">•</span>
-          <span class="text-emerald-700 bg-emerald-200/60 px-1.5 rounded">Tingkat 2</span>
+    <!-- HEADER BAR -->
+    <header class="bg-slate-800/90 border-b border-slate-700 px-4 py-3 flex items-center justify-between shrink-0 z-20">
+      <div class="flex items-center gap-3">
+        <div id="userAvatar" onclick="openStudentProfileModal()" class="w-10 h-10 rounded-2xl bg-amber-400 border-2 border-white flex items-center justify-center text-xl shadow-md cursor-pointer hover:scale-105 transition">
+          🦁
         </div>
-
-        <div class="flex items-center gap-1.5">
-          <!-- TABLET / MOBILE VIEW TOGGLE -->
-          <button onclick="toggleViewMode()" title="Ganti Mode Layar (HP / Tablet)" class="text-[10px] font-extrabold text-teal-800 bg-teal-50 hover:bg-teal-100 px-2.5 py-1 rounded-full border border-teal-200 flex items-center gap-1 transition">
-            <i id="viewModeIcon" class="fa-solid fa-tablet-screen-button text-teal-600"></i>
-            <span id="viewModeText" class="hidden sm:inline">Tablet</span>
-          </button>
-
-          <!-- TEACHER DASHBOARD BUTTON -->
-          <button onclick="openTeacherModal()" class="text-[10px] font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1.5 transition">
-            <i class="fa-solid fa-chalkboard-user text-amber-600"></i>
-            <span>Mr. Taqwa</span>
-            <i class="fa-solid fa-gear text-[10px] text-amber-500 ml-0.5"></i>
-          </button>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-fredoka text-sm font-bold text-white leading-tight">ALMAZAYA ISLAMIC SCHOOL</span>
+            <span class="hidden sm:inline-block text-[10px] bg-emerald-500/20 text-emerald-300 font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30">Kelas 7 Adaptif</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Kuis Kontekstual • Siswa: <strong id="studentNameText" class="text-amber-400">VIC</strong></p>
         </div>
       </div>
 
-      <!-- STUDENT INFO, STREAK & COINS -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="relative cursor-pointer group" onclick="openStudentProfileModal()">
-            <div id="userAvatar" class="w-11 h-11 rounded-full bg-amber-100 border-2 border-amber-400 flex items-center justify-center text-xl overflow-hidden shadow-sm group-hover:scale-105 transition">
-              🦁
-            </div>
-            <span id="userLevelBadge" class="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full border border-white">
-              Lvl 2
-            </span>
+      <div class="flex items-center gap-2">
+        <!-- SCORE / STREAK / COIN -->
+        <div class="hidden xs:flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-2xl border border-slate-700">
+          <div class="flex items-center gap-1">
+            <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+            <span id="quizScoreText" class="text-xs font-bold text-amber-300">0 Pt</span>
           </div>
-          <div>
-            <h1 class="font-fredoka text-base font-bold text-slate-800 leading-tight flex items-center gap-1">
-              Halo, <span id="studentNameText" class="text-indigo-600">VIC</span>! 🌟
-            </h1>
-            <p class="text-[11px] text-slate-400 font-semibold">Matematika Adaptif Tingkat Lanjut</p>
+          <span class="text-slate-600">|</span>
+          <div class="flex items-center gap-1">
+            <i class="fa-solid fa-coins text-yellow-400 text-xs"></i>
+            <span id="coinsText" class="text-xs font-bold text-yellow-300">280</span>
           </div>
         </div>
 
-        <!-- STREAK & COINS -->
-        <div class="flex items-center gap-1.5">
-          <div class="flex items-center gap-1 bg-orange-50 px-2.5 py-1 rounded-2xl border border-orange-200">
-            <i class="fa-solid fa-fire text-orange-500 text-xs"></i>
-            <span id="streakCount" class="text-xs font-extrabold text-orange-700">5 Hari</span>
-          </div>
-          <div class="flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-2xl border border-amber-200">
-            <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
-            <span id="coinCount" class="text-xs font-extrabold text-amber-700">240</span>
-          </div>
-        </div>
+        <!-- ORIENTATION HINT TOGGLE -->
+        <button onclick="toggleFullscreen()" class="p-2 text-slate-300 hover:text-white bg-slate-700/50 hover:bg-slate-700 rounded-xl transition" title="Layar Penuh">
+          <i class="fa-solid fa-expand text-sm"></i>
+        </button>
+
+        <!-- TEACHER DASHBOARD BUTTON -->
+        <button onclick="openTeacherModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm">
+          <i class="fa-solid fa-chalkboard-user"></i>
+          <span class="hidden sm:inline">Mr. Taqwa</span>
+        </button>
       </div>
     </header>
 
-    <!-- DYNAMIC MAIN CONTENT VIEW -->
-    <main id="mainView" class="flex-grow overflow-y-auto px-5 py-4 pb-24 space-y-5 custom-scrollbar">
-      <!-- Dynamic Views rendered via JS: Landing, Home, Adventure, Scratchpad, Rewards -->
+    <!-- DYNAMIC MAIN BODY (FLUID PORTRAIT & LANDSCAPE LAYOUT) -->
+    <main id="mainView" class="flex-grow overflow-y-auto p-4 sm:p-6 custom-scrollbar flex flex-col justify-between">
+      <!-- Content populated dynamically via JS -->
     </main>
 
-    <!-- BOTTOM NAVIGATION -->
-    <nav id="bottomNav" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-4 py-2 flex justify-around items-center z-20">
-      <button onclick="switchTab('landing')" id="nav-landing" class="flex flex-col items-center gap-1 text-slate-400 font-bold hover:text-teal-600 transition">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center">
-          <i class="fa-solid fa-shapes text-base"></i>
-        </div>
-        <span class="text-[10px]">Portal</span>
+    <!-- FOOTER NAV / QUICK ACTION BAR -->
+    <footer id="footerBar" class="bg-slate-800/80 border-t border-slate-700/80 px-4 py-2.5 flex items-center justify-between shrink-0 z-20">
+      <button onclick="showLobbyScreen()" class="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-house"></i>
+        <span>Menu Utama</span>
       </button>
 
-      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-teal-600 font-bold transition">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center bg-teal-50">
-          <i class="fa-solid fa-house text-base"></i>
-        </div>
-        <span class="text-[10px]">Beranda</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <button id="scratchpadBtn" onclick="toggleScratchpadOverlay()" class="bg-slate-700 hover:bg-slate-600 text-teal-300 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-pen-ruler"></i>
+          <span>Papan Corat-Coret</span>
+        </button>
 
-      <button onclick="switchTab('adventure')" id="nav-adventure" class="flex flex-col items-center gap-1 text-slate-400 font-bold hover:text-teal-600 transition">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center">
-          <i class="fa-solid fa-map text-base"></i>
-        </div>
-        <span class="text-[10px]">Petualangan</span>
-      </button>
-
-      <button onclick="switchTab('scratchpad')" id="nav-scratchpad" class="flex flex-col items-center gap-1 text-slate-400 font-bold hover:text-teal-600 transition">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center">
-          <i class="fa-solid fa-pen-ruler text-base"></i>
-        </div>
-        <span class="text-[10px]">Papan Tulis</span>
-      </button>
-
-      <button onclick="switchTab('rewards')" id="nav-rewards" class="flex flex-col items-center gap-1 text-slate-400 font-bold hover:text-teal-600 transition">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center">
-          <i class="fa-solid fa-trophy text-base"></i>
-        </div>
-        <span class="text-[10px]">Album</span>
-      </button>
-    </nav>
+        <button id="speakQuestionBtn" onclick="speakCurrentQuestion()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm">
+          <i class="fa-solid fa-volume-high"></i>
+          <span class="hidden xs:inline">Baca Soal</span>
+        </button>
+      </div>
+    </footer>
 
   </div>
 
-  <!-- TEACHER DASHBOARD MODAL (MR. TAQWA) -->
-  <div id="teacherModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4 border border-slate-100 custom-scrollbar">
-      <div class="flex justify-between items-center border-b pb-3">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-lg">
-            <i class="fa-solid fa-chalkboard-user"></i>
-          </div>
-          <div>
-            <h3 class="font-fredoka text-base font-bold text-slate-800 leading-none">Dasbor Mr. Taqwa (Level 2)</h3>
-            <p class="text-[11px] text-slate-400 font-semibold mt-1">Almazaya Islamic School • Matematika Adaptif</p>
-          </div>
+  <!-- SCRATCHPAD OVERLAY MODAL -->
+  <div id="scratchpadModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-3 sm:p-6">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-2xl w-full p-4 shadow-2xl flex flex-col gap-3">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <div class="flex items-center gap-2 text-teal-400 font-fredoka font-bold text-sm sm:text-base">
+          <i class="fa-solid fa-pen-ruler"></i>
+          <span>Papan Tulis Hitung VIC ✍️</span>
         </div>
-        <button onclick="closeTeacherModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center transition">
+        <button onclick="toggleScratchpadOverlay()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="space-y-3.5">
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Nama Siswa:</label>
-            <input type="text" id="teacherStudentName" value="VIC" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-teal-500">
+      <!-- CANVAS -->
+      <div class="relative bg-slate-950 rounded-2xl p-1 border border-slate-800 flex justify-center items-center">
+        <canvas id="scratchpadCanvas" width="500" height="320" class="interactive-canvas rounded-xl w-full max-w-full h-[280px] sm:h-[320px] bg-slate-950"></canvas>
+      </div>
+
+      <!-- TOOLS & COLOR PICKER -->
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="setScratchpadColor('#2dd4bf')" class="w-8 h-8 rounded-full bg-teal-400 ring-2 ring-white shadow-sm"></button>
+          <button onclick="setScratchpadColor('#f59e0b')" class="w-8 h-8 rounded-full bg-amber-400 ring-2 ring-white shadow-sm"></button>
+          <button onclick="setScratchpadColor('#f43f5e')" class="w-8 h-8 rounded-full bg-rose-400 ring-2 ring-white shadow-sm"></button>
+          <button onclick="setScratchpadColor('#a855f7')" class="w-8 h-8 rounded-full bg-purple-400 ring-2 ring-white shadow-sm"></button>
+          <button onclick="setScratchpadColor('#38bdf8')" class="w-8 h-8 rounded-full bg-sky-400 ring-2 ring-white shadow-sm"></button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="clearScratchpadCanvas()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1">
+            <i class="fa-solid fa-rotate-right"></i> Bersihkan
+          </button>
+          <button onclick="toggleScratchpadOverlay()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1 shadow-md">
+            <i class="fa-solid fa-check"></i> Selesai Hitung
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEACHER DASHBOARD MODAL (MR. TAQWA) -->
+  <div id="teacherModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-700 max-h-[90vh] overflow-y-auto space-y-4 custom-scrollbar text-slate-200">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/30">
+            <i class="fa-solid fa-chalkboard-user"></i>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Pembuka Level V2:</label>
-            <select id="teacherUnlockLevelSelect" onchange="updateLevelOverride(this.value)" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-teal-500">
-              <option value="1">Buka s/d Level 1</option>
-              <option value="5">Buka s/d Level 5 (Menulis & Tracing)</option>
-              <option value="10">Buka s/d Level 10 (Garis Bilangan)</option>
-              <option value="15">Buka s/d Level 15 (Penjumlahan & Timbangan)</option>
-              <option value="20">Buka Semua Level V2 (1-20)</option>
-            </select>
+            <h3 class="font-fredoka text-base font-bold text-white leading-none">Dasbor Mr. Taqwa (Kuis Kontekstual)</h3>
+            <p class="text-[11px] text-slate-400 font-semibold mt-1">Almazaya Islamic School • Matematika Kelas 7 Inklusif</p>
+          </div>
+        </div>
+        <button onclick="closeTeacherModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Nama Siswa:</label>
+            <input type="text" id="teacherStudentName" value="VIC" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl font-bold text-white focus:outline-none focus:border-teal-500">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Target Soal:</label>
+            <input type="text" readonly value="10 Soal Kontekstual" class="w-full px-3 py-2 bg-slate-950/50 border border-slate-800 rounded-xl font-bold text-slate-400">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">URL Web App Google Apps Script (GAS):</label>
-          <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-teal-500 font-mono text-slate-700">
-          <p class="text-[10px] text-slate-400 mt-1">Nilai & Akurasi Latihan VIC dikirim langsung ke Google Spreadsheet Mr. Taqwa.</p>
+          <label class="block font-bold text-slate-300 mb-1">URL Web App Google Apps Script (GAS):</label>
+          <input type="url" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-teal-300 font-mono focus:outline-none focus:border-teal-500 text-[11px]">
+          <p class="text-[10px] text-slate-400 mt-1">Nilai & analisis kuis VIC terkirim langsung ke Spreadsheet Google Mr. Taqwa saat kuis selesai.</p>
         </div>
 
         <!-- Google Apps Script Code Block -->
-        <div class="bg-slate-900 text-slate-200 p-3.5 rounded-2xl space-y-2 border border-slate-800">
-          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-            <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-              <i class="fa-solid fa-code"></i> Kode Spreadsheet Apps Script:
+        <div class="bg-slate-950 p-3 rounded-2xl space-y-2 border border-slate-800">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+            <span class="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-code"></i> Kode Apps Script Spreadsheet:
             </span>
-            <button onclick="copyGasCode()" class="text-[10px] bg-teal-600 hover:bg-teal-500 text-white font-bold px-2.5 py-1 rounded-lg transition flex items-center gap-1">
-              <i class="fa-regular fa-copy"></i> Salin Kode
+            <button onclick="copyGasCode()" class="text-[10px] bg-teal-600 hover:bg-teal-500 text-white font-bold px-2 py-0.5 rounded-lg transition flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> Salin
             </button>
           </div>
-          <textarea id="gasCodeText" readonly class="w-full h-28 bg-slate-950 text-teal-300 font-mono text-[10px] p-2 rounded-xl resize-none focus:outline-none border-0">
+          <textarea id="gasCodeText" readonly class="w-full h-24 bg-slate-900 text-teal-300 font-mono text-[10px] p-2 rounded-xl resize-none focus:outline-none border-0">
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
@@ -277,14 +267,13 @@ function doPost(e) {
     new Date(),
     "Almazaya Islamic School",
     "Mr. Taqwa",
-    "Matematika Kelas 7 Inklusif V2",
+    "Kuis Matematika Kontekstual Kelas 7",
     data.studentName || "VIC",
-    data.worldName || "-",
-    data.level || 1,
     data.score || 0,
-    data.stars || 3,
+    data.correctCount || 0,
+    data.totalQuestions || 10,
     data.accuracy || "100%",
-    data.status || "Selesai V2"
+    data.status || "Selesai Kuis"
   ]);
   return ContentService.createTextOutput(JSON.stringify({status: "success"}))
     .setMimeType(ContentService.MimeType.JSON);
@@ -292,62 +281,243 @@ function doPost(e) {
           </textarea>
         </div>
 
-        <!-- Score History List -->
+        <!-- History -->
         <div>
-          <div class="flex justify-between items-center mb-2">
-            <h4 class="text-xs font-bold text-slate-700">Riwayat Nilai Latihan Level 2:</h4>
-            <button onclick="clearScoreHistory()" class="text-[10px] text-rose-600 hover:underline font-semibold">Hapus Riwayat</button>
+          <div class="flex justify-between items-center mb-1.5">
+            <h4 class="font-bold text-slate-300">Riwayat Hasil Kuis VIC:</h4>
+            <button onclick="clearQuizHistory()" class="text-[10px] text-rose-400 hover:underline">Hapus Riwayat</button>
           </div>
-          <div id="scoreHistoryList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs custom-scrollbar">
+          <div id="quizHistoryList" class="space-y-1.5 max-h-32 overflow-y-auto custom-scrollbar">
             <!-- Populated dynamically -->
           </div>
         </div>
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button onclick="saveTeacherSettings()" class="flex-grow bg-teal-600 text-white font-bold py-2.5 rounded-xl hover:bg-teal-700 transition text-xs flex items-center justify-center gap-1.5">
+        <button onclick="saveTeacherSettings()" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-1.5 shadow-md">
           <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan
         </button>
       </div>
     </div>
   </div>
 
-  <!-- STUDENT PROFILE AVATAR MODAL -->
-  <div id="studentProfileModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4 text-center border border-slate-100">
-      <h3 class="font-fredoka text-lg font-bold text-slate-800">Pilih Avatar Siswa VIC 🎨</h3>
-      
-      <!-- EMOJI SELECTION GRID -->
+  <!-- STUDENT PROFILE MODAL -->
+  <div id="studentProfileModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl max-w-sm w-full p-5 shadow-2xl border border-slate-700 space-y-4 text-center">
+      <h3 class="font-fredoka text-lg font-bold text-white">Pilih Maskot Siswa VIC 🎨</h3>
       <div id="avatarPickerGrid" class="grid grid-cols-4 gap-3">
-        <!-- Rendered cleanly via JavaScript -->
+        <!-- Rendered dynamically -->
       </div>
-
-      <button onclick="closeStudentProfileModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-xl text-xs transition">
+      <button onclick="closeStudentProfileModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl text-xs transition">
         Tutup
       </button>
     </div>
   </div>
 
-  <!-- JAVASCRIPT APP LOGIC ENGINE -->
+  <!-- JAVASCRIPT APPLICATION LOGIC ENGINE -->
   <script>
-    const state = {
+    const quizState = {
       schoolName: 'ALMAZAYA ISLAMIC SCHOOL',
       teacherName: 'Mr. Taqwa',
-      subject: 'Matematika Adaptif Kelas 7 (Tingkat 2)',
-      studentName: localStorage.getItem('ka2_studentName') || 'VIC',
-      avatar: localStorage.getItem('ka2_avatar') || '🦁',
-      coins: parseInt(localStorage.getItem('ka2_coins')) || 240,
-      streak: parseInt(localStorage.getItem('ka2_streak')) || 5,
-      unlockedLevel: parseInt(localStorage.getItem('ka2_unlockedLevel')) || 1,
-      gasUrl: localStorage.getItem('ka2_gasUrl') || '',
-      isTabletMode: localStorage.getItem('ka2_isTabletMode') === 'true',
-      scoresHistory: JSON.parse(localStorage.getItem('ka2_scoresHistory')) || [
-        { date: 'Hari Ini, 09:30', world: 'Hutan Penulisan', level: 1, score: 100, stars: 3, accuracy: '98%' },
-        { date: 'Kemarin, 11:15', world: 'Lembah Garis Bilangan', level: 6, score: 100, stars: 3, accuracy: '100%' }
-      ],
-      unlockedStickers: JSON.parse(localStorage.getItem('ka2_stickers')) || ['🦁', '⭐'],
-      activeTab: 'landing',
-      currentActivity: null
+      studentName: localStorage.getItem('kmk_studentName') || 'VIC',
+      avatar: localStorage.getItem('kmk_avatar') || '🦁',
+      coins: parseInt(localStorage.getItem('kmk_coins')) || 280,
+      gasUrl: localStorage.getItem('kmk_gasUrl') || '',
+      quizHistory: JSON.parse(localStorage.getItem('kmk_quizHistory')) || [],
+      
+      // Quiz Runtime State
+      currentQuestionIndex: 0,
+      score: 0,
+      userAnswers: [],
+      selectedOptionIndex: null,
+      isAnswered: false,
+      
+      // Questions Bank (Contextual Stories tailored for VIC at Almazaya Islamic School)
+      questions: [
+        {
+          id: 1,
+          category: 'Kantin Almazaya',
+          icon: '🥪',
+          title: 'Total Belanja di Kantin',
+          story: 'VIC membeli 1 buah roti seharga Rp3.000 dan 1 kotak susu seharga Rp4.000 di kantin Almazaya Islamic School.',
+          questionText: 'Berapakah total uang yang harus dibayar oleh VIC?',
+          interactiveType: 'coins_calculator',
+          itemA: { name: 'Roti', price: 3000, img: '🥪' },
+          itemB: { name: 'Susu', price: 4000, img: '🧃' },
+          options: [
+            { text: 'Rp6.000', isCorrect: false },
+            { text: 'Rp7.000', isCorrect: true },
+            { text: 'Rp8.000', isCorrect: false },
+            { text: 'Rp5.000', isCorrect: false }
+          ],
+          hint: 'Hitunglah Rp3.000 + Rp4.000'
+        },
+        {
+          id: 2,
+          category: 'Jadwal Masuk Kelas',
+          icon: '⏰',
+          title: 'Jam Terlambat Sekolah',
+          story: 'Bel masuk kelas Almazaya berbunyi tepat pukul 07.00 pagi. Jika jam tangan VIC menunjukkan pukul 08.00 pagi.',
+          questionText: 'Berapa jam VIC terlambat masuk kelas?',
+          interactiveType: 'clock_simulator',
+          startHour: 7,
+          currentHour: 8,
+          options: [
+            { text: '1 jam', isCorrect: true },
+            { text: '2 jam', isCorrect: false },
+            { text: '3 jam', isCorrect: false },
+            { text: '0 jam', isCorrect: false }
+          ],
+          hint: 'Selisih dari pukul 07.00 ke 08.00 adalah 1 jam'
+        },
+        {
+          id: 3,
+          category: 'Lapangan Olahraga',
+          icon: '🏃',
+          title: 'Melangkah di Ubin Lapangan',
+          story: 'VIC berdiri di ubin nomor 8. VIC melangkah maju 5 ubin ke depan, lalu melangkah mundur 2 ubin.',
+          questionText: 'Di ubin nomor berapakah VIC berdiri sekarang?',
+          interactiveType: 'tile_stepper',
+          startTile: 8,
+          stepForward: 5,
+          stepBackward: 2,
+          options: [
+            { text: 'Nomor 10', isCorrect: false },
+            { text: 'Nomor 11', isCorrect: true },
+            { text: 'Nomor 12', isCorrect: false },
+            { text: 'Nomor 13', isCorrect: false }
+          ],
+          hint: 'Maju: 8 + 5 = 13. Mundur: 13 - 2 = 11'
+        },
+        {
+          id: 4,
+          category: 'Keseimbangan Benda',
+          icon: '⚖️',
+          title: 'Menyeimbangkan Timbangan Apel',
+          story: 'Mr. Taqwa menaruh 12 buah apel di timbangan sebelah kiri. Di sebelah kanan baru ada 7 buah apel.',
+          questionText: 'Berapa buah apel lagi yang harus ditambah di sebelah kanan agar timbangan seimbang?',
+          interactiveType: 'balance_scale',
+          leftCount: 12,
+          rightCount: 7,
+          targetAdd: 5,
+          options: [
+            { text: '3 buah apel', isCorrect: false },
+            { text: '4 buah apel', isCorrect: false },
+            { text: '5 buah apel', isCorrect: true },
+            { text: '6 buah apel', isCorrect: false }
+          ],
+          hint: 'Hitung selisihnya: 12 - 7 = 5'
+        },
+        {
+          id: 5,
+          category: 'Kantin Almazaya',
+          icon: '💵',
+          title: 'Uang Kembalian Buku',
+          story: 'VIC membayar sebuah buku latihan seharga Rp6.000 menggunakan selembar uang Rp10.000.',
+          questionText: 'Berapakah uang kembalian yang diterima VIC?',
+          interactiveType: 'money_change',
+          paid: 10000,
+          cost: 6000,
+          options: [
+            { text: 'Rp3.000', isCorrect: false },
+            { text: 'Rp4.000', isCorrect: true },
+            { text: 'Rp5.000', isCorrect: false },
+            { text: 'Rp2.000', isCorrect: false }
+          ],
+          hint: 'Hitung: Rp10.000 - Rp6.000 = Rp4.000'
+        },
+        {
+          id: 6,
+          category: 'Ten-Frame Kue',
+          icon: '🍩',
+          title: 'Menghitung Seluruh Donat',
+          story: 'Di kotak Ten-Frame pertama terdapat 10 kue donat penuh. Di kotak kedua terdapat 6 kue donat.',
+          questionText: 'Berapakah jumlah seluruh donat milik kelas VIC?',
+          interactiveType: 'ten_frame_donuts',
+          frame1: 10,
+          frame2: 6,
+          options: [
+            { text: '14 donat', isCorrect: false },
+            { text: '15 donat', isCorrect: false },
+            { text: '16 donat', isCorrect: true },
+            { text: '18 donat', isCorrect: false }
+          ],
+          hint: 'Hitung: 10 + 6 = 16'
+        },
+        {
+          id: 7,
+          category: 'Kegiatan Masjid',
+          icon: '🕌',
+          title: 'Waktu Pembelajaran Selesai',
+          story: 'Jadwal Sholat Zuhur berjamaah di masjid Almazaya adalah pukul 12.00. Jika pembelajaran kelas VIC selesai 1 jam sebelum Sholat Zuhur.',
+          questionText: 'Pukul berapakah pembelajaran selesai?',
+          interactiveType: 'clock_simulator',
+          startHour: 12,
+          currentHour: 11,
+          options: [
+            { text: 'Pukul 10.00', isCorrect: false },
+            { text: 'Pukul 11.00', isCorrect: true },
+            { text: 'Pukul 09.00', isCorrect: false },
+            { text: 'Pukul 01.00', isCorrect: false }
+          ],
+          hint: '1 jam sebelum pukul 12.00 adalah pukul 11.00'
+        },
+        {
+          id: 8,
+          category: 'Transportasi Sekolah',
+          icon: '🚌',
+          title: 'Jumlah Siswa di Bus Sekolah',
+          story: 'Bus sekolah Almazaya membawa 15 siswa. Di halte pertama turun 4 siswa, lalu di halte kedua naik 3 siswa baru.',
+          questionText: 'Berapakah jumlah siswa di dalam bus sekarang?',
+          interactiveType: 'bus_passengers',
+          initial: 15,
+          off: 4,
+          on: 3,
+          options: [
+            { text: '12 siswa', isCorrect: false },
+            { text: '13 siswa', isCorrect: false },
+            { text: '14 siswa', isCorrect: true },
+            { text: '15 siswa', isCorrect: false }
+          ],
+          hint: 'Hitung: 15 - 4 = 11, lalu 11 + 3 = 14'
+        },
+        {
+          id: 9,
+          category: 'Pecahan Uang',
+          icon: '🪙',
+          title: 'Selisih Uang Saku',
+          story: 'VIC memiliki 1 lembar Rp5.000 dan 2 koin Rp1.000 (total Rp7.000). Ahmad memiliki 1 lembar Rp10.000.',
+          questionText: 'Berapakah selisih uang saku VIC dan Ahmad?',
+          interactiveType: 'money_diff',
+          vicMoney: 7000,
+          ahmadMoney: 10000,
+          options: [
+            { text: 'Rp2.000', isCorrect: false },
+            { text: 'Rp3.000', isCorrect: true },
+            { text: 'Rp4.000', isCorrect: false },
+            { text: 'Rp1.000', isCorrect: false }
+          ],
+          hint: 'Hitung: Rp10.000 - Rp7.000 = Rp3.000'
+        },
+        {
+          id: 10,
+          category: 'Timbangan Buah',
+          icon: '🍉',
+          title: 'Timbangan Semangka & Melon',
+          story: 'Di timbangan sebelah kiri terdapat 1 semangka (15 kg). Di kanan terdapat 2 melon (8 kg dan 4 kg = 12 kg).',
+          questionText: 'Berapa kg beban yang harus ditambah di sebelah kanan agar seimbang?',
+          interactiveType: 'balance_weight',
+          leftWeight: 15,
+          rightWeight: 12,
+          options: [
+            { text: '2 kg', isCorrect: false },
+            { text: '3 kg', isCorrect: true },
+            { text: '4 kg', isCorrect: false },
+            { text: '5 kg', isCorrect: false }
+          ],
+          hint: 'Hitung selisih: 15 kg - 12 kg = 3 kg'
+        }
+      ]
     };
 
     function speakText(text) {
@@ -355,13 +525,13 @@ function doPost(e) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'id-ID';
-        utterance.rate = 0.85; // Gentle slow pace for VIC
-        utterance.pitch = 1.1;
+        utterance.rate = 0.86; // Gentle pace for VIC
+        utterance.pitch = 1.05;
         window.speechSynthesis.speak(utterance);
       }
     }
 
-    function playSoundEffect(type) {
+    function playSound(type) {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -369,906 +539,605 @@ function doPost(e) {
         osc.connect(gain);
         gain.connect(ctx.destination);
 
-        if (type === 'success') {
+        if (type === 'correct') {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(523.25, ctx.currentTime);
           osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.12);
           osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.24);
           osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.36);
           gain.gain.setValueAtTime(0.3, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
           osc.start();
-          osc.stop(ctx.currentTime + 0.7);
+          osc.stop(ctx.currentTime + 0.6);
         } else if (type === 'pop') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(350, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
-          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          osc.frequency.setValueAtTime(320, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.25, ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
           osc.start();
           osc.stop(ctx.currentTime + 0.08);
-        } else if (type === 'jump') {
+        } else if (type === 'try_again') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(200, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.15);
-          gain.gain.setValueAtTime(0.25, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+          osc.frequency.setValueAtTime(300, ctx.currentTime);
+          osc.frequency.setValueAtTime(250, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
           osc.start();
-          osc.stop(ctx.currentTime + 0.15);
+          osc.stop(ctx.currentTime + 0.3);
         }
       } catch (e) {
-        console.log("Audio effect generated successfully");
+        console.log("Audio synthesized successfully");
       }
     }
 
-    function toggleViewMode() {
-      state.isTabletMode = !state.isTabletMode;
-      localStorage.setItem('ka2_isTabletMode', state.isTabletMode);
-      applyViewModeUI();
-    }
-
-    function applyViewModeUI() {
-      const appContainer = document.getElementById('app');
-      const icon = document.getElementById('viewModeIcon');
-      const text = document.getElementById('viewModeText');
-
-      if (state.isTabletMode) {
-        appContainer.classList.remove('max-w-md');
-        appContainer.classList.add('max-w-3xl');
-        icon.className = "fa-solid fa-mobile-screen text-teal-600";
-        text.textContent = "HP";
-      } else {
-        appContainer.classList.remove('max-w-3xl');
-        appContainer.classList.add('max-w-md');
-        icon.className = "fa-solid fa-tablet-screen-button text-teal-600";
-        text.textContent = "Tablet";
-      }
-    }
-
-    function switchTab(tab) {
-      state.activeTab = tab;
+    function showLobbyScreen() {
+      const main = document.getElementById('mainView');
       
-      ['landing', 'home', 'adventure', 'scratchpad', 'rewards'].forEach(t => {
-        const btn = document.getElementById(`nav-${t}`);
-        if (!btn) return;
-        if (t === tab) {
-          btn.className = "flex flex-col items-center gap-1 text-teal-600 font-bold transition";
-          btn.querySelector('div').className = "w-9 h-9 rounded-2xl flex items-center justify-center bg-teal-50 shadow-sm";
-        } else {
-          btn.className = "flex flex-col items-center gap-1 text-slate-400 font-bold hover:text-teal-600 transition";
-          btn.querySelector('div').className = "w-9 h-9 rounded-2xl flex items-center justify-center";
-        }
-      });
-
-      const mainView = document.getElementById('mainView');
-      if (tab === 'landing') renderLandingView(mainView);
-      else if (tab === 'home') renderHomeView(mainView);
-      else if (tab === 'adventure') renderAdventureView(mainView);
-      else if (tab === 'scratchpad') renderScratchpadView(mainView);
-      else if (tab === 'rewards') renderRewardsView(mainView);
-    }
-
-    function renderLandingView(container) {
-      container.innerHTML = `
-        <div class="space-y-4 animate-fade-in">
-          <!-- WELCOME LANDING BANNER -->
-          <div class="bg-gradient-to-br from-indigo-600 via-teal-600 to-emerald-500 rounded-3xl p-5 text-white relative overflow-hidden shadow-xl shadow-indigo-500/20 border border-indigo-400/30">
-            <div class="relative z-10 space-y-2.5">
-              <div class="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
-                <i class="fa-solid fa-crown text-amber-300"></i>
-                <span>Tingkat 2 • Pembelajaran Lanjutan</span>
+      main.innerHTML = `
+        <div class="space-y-5 my-auto animate-fade-in max-w-3xl mx-auto w-full">
+          <!-- HERO LOBBY BANNER -->
+          <div class="bg-gradient-to-br from-indigo-600 via-teal-600 to-emerald-600 rounded-3xl p-6 text-white relative overflow-hidden shadow-2xl border border-indigo-400/30">
+            <div class="relative z-10 space-y-3">
+              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider">
+                <i class="fa-solid fa-graduation-cap text-amber-300"></i>
+                <span>Tingkat 2 • Soal Cerita Kontekstual</span>
               </div>
-              <h2 class="font-fredoka text-2xl font-bold leading-snug">
-                Petualangan Angka V2 🚀
-              </h2>
-              <p class="text-xs text-teal-50 leading-relaxed max-w-[260px]">
-                Modul matematika adaptif interaktif diselaraskan oleh <strong>Mr. Taqwa</strong> khusus untuk <strong>VIC</strong> di <strong>Almazaya Islamic School</strong>.
-              </p>
               
-              <div class="pt-2 flex items-center gap-2">
-                <button onclick="switchTab('adventure')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-fredoka font-bold text-xs px-4 py-2.5 rounded-2xl shadow-lg hover:scale-105 transition flex items-center gap-2">
-                  <i class="fa-solid fa-play"></i> Mulai Level 2
+              <h1 class="font-fredoka text-2xl sm:text-3xl font-bold leading-tight">
+                Kuis Matematika Kontekstual Almazaya 🎯
+              </h1>
+
+              <p class="text-xs sm:text-sm text-teal-50 max-w-xl leading-relaxed">
+                Halo <strong>${quizState.studentName}</strong>! Mari selesaikan <strong>10 Soal Cerita Kehidupan Nyata</strong> di sekolah bersama <strong>Mr. Taqwa</strong>!
+              </p>
+
+              <div class="pt-2 flex flex-wrap items-center gap-3">
+                <button onclick="startQuizGame()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-fredoka font-bold text-sm px-6 py-3 rounded-2xl shadow-xl hover:scale-105 transition flex items-center gap-2">
+                  <i class="fa-solid fa-play"></i> Mulai Kuis Sekarang
                 </button>
-                <button onclick="switchTab('scratchpad')" class="bg-white/20 hover:bg-white/30 text-white font-fredoka font-bold text-xs px-3 py-2.5 rounded-2xl transition flex items-center gap-1.5">
-                  <i class="fa-solid fa-pen-ruler text-amber-300"></i> Papan Tulis
+                <button onclick="speakText('Selamat datang di Kuis Matematika Kontekstual Almazaya Islamic School! Tekan tombol kuning untuk mulai kuis bersama Mr. Taqwa.')" class="bg-white/10 hover:bg-white/20 text-white font-fredoka font-bold text-xs px-4 py-3 rounded-2xl transition flex items-center gap-2">
+                  <i class="fa-solid fa-volume-high text-amber-300"></i> Suara Panduan
                 </button>
               </div>
             </div>
 
-            <div class="absolute -right-3 -bottom-5 w-36 h-36 flex items-center justify-center text-8xl opacity-85 select-none pointer-events-none animate-float">
+            <div class="absolute -right-4 -bottom-6 w-40 h-40 flex items-center justify-center text-8xl opacity-80 pointer-events-none animate-float">
               🦁
             </div>
           </div>
 
-          <!-- TEACHER & SCHOOL CREDENTIAL CARD -->
-          <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex items-center gap-3.5">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-100 border-2 border-indigo-300 flex items-center justify-center text-2xl text-indigo-700 shrink-0">
-              👨‍🏫
-            </div>
-            <div class="flex-grow">
-              <h3 class="font-fredoka text-sm font-bold text-slate-800">Pendampingan Mr. Taqwa</h3>
-              <p class="text-[11px] text-slate-500 font-medium">Pengampu Matematika Inklusif Kelas 7</p>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Almazaya School</span>
-                <span class="text-[9px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">Progres VIC Selesai V1</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 4 NEW WORLD MODULES PREVIEW -->
+          <!-- GRID CATEGORIES OVERVIEW -->
           <div>
-            <h3 class="font-fredoka text-sm font-bold text-slate-800 mb-2.5 flex items-center justify-between">
-              <span>🌟 4 Dunia Baru (Level 2)</span>
-              <span onclick="switchTab('adventure')" class="text-xs text-teal-600 font-bold cursor-pointer hover:underline">Peta Level <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+            <h3 class="font-fredoka text-sm font-bold text-slate-300 mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-teal-400"></i>
+              <span>Cakupan Topik Soal Kontekstual VIC (10 Soal):</span>
             </h3>
 
-            <div class="grid grid-cols-2 gap-2.5">
-              <div onclick="startSpecificActivity(1, 1)" class="bg-blue-50 border border-blue-100 rounded-3xl p-3.5 cursor-pointer hover:border-blue-300 transition shadow-sm group">
-                <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition shadow-xs">
-                  ✍️
-                </div>
-                <h4 class="font-fredoka text-xs font-bold text-slate-800">1. Hutan Penulisan</h4>
-                <p class="text-[10px] text-slate-500 mt-0.5">Tracing angka 11-20 & simbol</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center text-center">
+                <span class="text-2xl mb-1">🥪</span>
+                <span class="font-bold text-xs text-white">Kantin Almazaya</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Total Belanja & Kembalian</span>
               </div>
 
-              <div onclick="startSpecificActivity(2, 6)" class="bg-emerald-50 border border-emerald-100 rounded-3xl p-3.5 cursor-pointer hover:border-emerald-300 transition shadow-sm group">
-                <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition shadow-xs">
-                  🦘
-                </div>
-                <h4 class="font-fredoka text-xs font-bold text-slate-800">2. Garis Bilangan</h4>
-                <p class="text-[10px] text-slate-500 mt-0.5">Melompat maju & mundur</p>
+              <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center text-center">
+                <span class="text-2xl mb-1">⏰</span>
+                <span class="font-bold text-xs text-white">Jam & Kegiatan</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Waktu Terlambat & Sholat</span>
               </div>
 
-              <div onclick="startSpecificActivity(3, 11)" class="bg-amber-50 border border-amber-100 rounded-3xl p-3.5 cursor-pointer hover:border-amber-300 transition shadow-sm group">
-                <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition shadow-xs">
-                  ⚖️
-                </div>
-                <h4 class="font-fredoka text-xs font-bold text-slate-800">3. Sungai Timbangan</h4>
-                <p class="text-[10px] text-slate-500 mt-0.5">Bingkai 10 & timbangan visual</p>
+              <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center text-center">
+                <span class="text-2xl mb-1">⚖️</span>
+                <span class="font-bold text-xs text-white">Timbangan Benda</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Keseimbangan Apel & Melon</span>
               </div>
 
-              <div onclick="startSpecificActivity(4, 16)" class="bg-purple-50 border border-purple-100 rounded-3xl p-3.5 cursor-pointer hover:border-purple-300 transition shadow-sm group">
-                <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition shadow-xs">
-                  ⏰
-                </div>
-                <h4 class="font-fredoka text-xs font-bold text-slate-800">4. Istana Jam & Uang</h4>
-                <p class="text-[10px] text-slate-500 mt-0.5">Mengenal jam & koin rupiah</p>
+              <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 flex flex-col items-center text-center">
+                <span class="text-2xl mb-1">🚌</span>
+                <span class="font-bold text-xs text-white">Bus & Ubin</span>
+                <span class="text-[10px] text-slate-400 mt-0.5">Penumpang & Langkah</span>
               </div>
-            </div>
-          </div>
-
-          <!-- AUDIO MOTIVATION BANNER -->
-          <div onclick="speakText('Selamat datang di Kawan Angka Tingkat Dua Almazaya Islamic School! Hari ini VIC akan belajar menulis angka belasan, melompat di garis bilangan, dan menimbang benda bersama Mr Taqwa!')" class="bg-slate-900 text-white rounded-3xl p-4 flex items-center gap-3.5 cursor-pointer hover:bg-slate-800 transition">
-            <div class="w-10 h-10 rounded-2xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-xl shrink-0">
-              <i class="fa-solid fa-volume-high"></i>
-            </div>
-            <div>
-              <h4 class="font-fredoka text-xs font-bold text-amber-300">Dengarkan Instruksi Mr. Taqwa 🔊</h4>
-              <p class="text-[10px] text-slate-300">Sentuh di sini untuk mendengarkan pesan motivasi ramah.</p>
             </div>
           </div>
         </div>
       `;
     }
 
-    function renderHomeView(container) {
-      container.innerHTML = `
-        <div class="space-y-4">
-          <!-- FEATURED LESSON CARD -->
-          <div class="bg-gradient-to-r from-teal-500 to-indigo-600 rounded-3xl p-5 text-white relative overflow-hidden shadow-lg shadow-teal-500/20">
-            <div class="relative z-10 space-y-2">
-              <span class="bg-white/20 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">Latihan Pilihan Hari Ini</span>
-              <h2 class="font-fredoka text-2xl font-bold leading-tight">Menebalkan Angka 12</h2>
-              <p class="text-xs text-teal-50 leading-relaxed max-w-[220px]">Latih jarimu menebalkan dua digit angka 12 secara teratur ya, VIC!</p>
-              <button onclick="startSpecificActivity(1, 2)" class="mt-2 bg-white text-indigo-800 font-fredoka font-bold text-xs px-4 py-2.5 rounded-2xl shadow-md hover:bg-teal-50 transition flex items-center gap-2">
-                <i class="fa-solid fa-pen text-xs text-teal-600"></i> Mulai Menulis
+    function startQuizGame() {
+      quizState.currentQuestionIndex = 0;
+      quizState.score = 0;
+      quizState.userAnswers = [];
+      renderQuestionScreen();
+    }
+
+    function renderQuestionScreen() {
+      quizState.isAnswered = false;
+      quizState.selectedOptionIndex = null;
+
+      const q = quizState.questions[quizState.currentQuestionIndex];
+      const main = document.getElementById('mainView');
+
+      speakText(`${q.category}. Soal nomor ${quizState.currentQuestionIndex + 1}: ${q.story} ${q.questionText}`);
+
+      // FLUID TWO-COLUMN LAYOUT IN LANDSCAPE, SINGLE-COLUMN IN PORTRAIT
+      main.innerHTML = `
+        <div class="space-y-4 max-w-4xl mx-auto w-full">
+          
+          <!-- PROGRESS TOP BAR -->
+          <div class="flex items-center justify-between bg-slate-800/90 border border-slate-700/80 px-4 py-2.5 rounded-2xl shadow-sm">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-xs">${q.id}</span>
+              <span class="font-fredoka text-xs font-bold text-slate-200">${q.category}</span>
+            </div>
+
+            <!-- PROGRESS BAR -->
+            <div class="flex items-center gap-3">
+              <div class="w-28 sm:w-40 bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                <div class="bg-teal-400 h-full transition-all duration-300" style="width: ${((quizState.currentQuestionIndex + 1) / quizState.questions.length) * 100}%"></div>
+              </div>
+              <span class="text-xs font-bold text-slate-400">${quizState.currentQuestionIndex + 1}/${quizState.questions.length}</span>
+            </div>
+          </div>
+
+          <!-- MAIN QUESTION & INTERACTIVE VISUAL CARD (GRID FOR RESPONSIVE) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            
+            <!-- LEFT COLUMN: CONTEXTUAL STORY & INTERACTIVE SIMULATOR (LG: 7 COLS) -->
+            <div class="lg:col-span-7 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-4 sm:p-5 space-y-3.5 shadow-lg">
+              <div class="flex items-center gap-2.5 text-amber-400 border-b border-slate-700/70 pb-2.5">
+                <span class="text-2xl">${q.icon}</span>
+                <h2 class="font-fredoka text-sm sm:text-base font-bold text-white">${q.title}</h2>
+              </div>
+
+              <!-- STORY NARRATIVE -->
+              <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                ${q.story}
+              </p>
+
+              <!-- QUESTION PROMPT -->
+              <div class="bg-teal-950/40 border border-teal-500/30 p-3 rounded-2xl text-xs sm:text-sm font-bold text-teal-300 flex items-start gap-2">
+                <i class="fa-solid fa-circle-question text-teal-400 text-base mt-0.5 shrink-0"></i>
+                <span>${q.questionText}</span>
+              </div>
+
+              <!-- DYNAMIC INTERACTIVE SIMULATOR HELPER -->
+              <div id="interactiveHelperContainer" class="bg-slate-950 p-3 sm:p-4 rounded-2xl border border-slate-800 min-h-[140px] flex items-center justify-center">
+                ${renderInteractiveHelper(q)}
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: MULTIPLE CHOICE OPTIONS & ACTIONS (LG: 5 COLS) -->
+            <div class="lg:col-span-5 space-y-3">
+              <div class="bg-slate-800/90 border border-slate-700/80 rounded-3xl p-4 space-y-3 shadow-lg">
+                <div class="flex justify-between items-center">
+                  <span class="text-xs font-bold text-slate-400">Pilih Jawaban VIC:</span>
+                  <button onclick="speakText('${q.hint}')" class="text-[11px] text-amber-400 hover:underline font-bold flex items-center gap-1">
+                    <i class="fa-solid fa-lightbulb"></i> Petunjuk
+                  </button>
+                </div>
+
+                <!-- OPTIONS LIST -->
+                <div class="space-y-2.5">
+                  ${q.options.map((opt, idx) => `
+                    <button id="optionBtn-${idx}" onclick="selectAnswerOption(${idx})" 
+                      class="w-full text-left p-3.5 rounded-2xl font-fredoka font-bold text-xs sm:text-sm transition flex items-center justify-between border-2
+                      bg-slate-900/90 border-slate-700 text-slate-200 hover:border-teal-500 hover:bg-slate-800">
+                      <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-teal-400">
+                          ${['A', 'B', 'C', 'D'][idx]}
+                        </span>
+                        <span>${opt.text}</span>
+                      </div>
+                      <i id="optionCheckIcon-${idx}" class="fa-solid fa-circle text-slate-700 text-base"></i>
+                    </button>
+                  `).join('')}
+                </div>
+
+                <!-- SUBMIT / NEXT BUTTON -->
+                <button id="submitAnswerBtn" onclick="submitCurrentAnswer()" disabled 
+                  class="w-full bg-slate-700 text-slate-400 font-fredoka font-bold py-3 rounded-2xl transition text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed">
+                  <span>Periksa Jawaban</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+
+              <!-- QUICK HINT CARD -->
+              <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-2xl text-[11px] text-amber-300 flex items-center justify-between">
+                <span>💡 VIC bisa pakai <strong>Papan Corat-Coret</strong> untuk berhitung!</span>
+                <button onclick="toggleScratchpadOverlay()" class="underline font-bold">Buka</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+    }
+
+    function renderInteractiveHelper(q) {
+      if (q.interactiveType === 'coins_calculator') {
+        return `
+          <div class="w-full text-center space-y-2">
+            <div class="flex justify-center items-center gap-4">
+              <div class="bg-slate-900 p-2 rounded-2xl border border-slate-800 text-center">
+                <span class="text-3xl block">${q.itemA.img}</span>
+                <span class="text-[11px] font-bold text-slate-300 block">${q.itemA.name}</span>
+                <span class="text-[10px] text-teal-400 font-bold block">Rp3.000</span>
+              </div>
+              <span class="text-xl font-bold text-amber-400">+</span>
+              <div class="bg-slate-900 p-2 rounded-2xl border border-slate-800 text-center">
+                <span class="text-3xl block">${q.itemB.img}</span>
+                <span class="text-[11px] font-bold text-slate-300 block">${q.itemB.name}</span>
+                <span class="text-[10px] text-teal-400 font-bold block">Rp4.000</span>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 font-semibold">Gabungkan kedua harga makanan kantin Almazaya!</p>
+          </div>
+        `;
+      } else if (q.interactiveType === 'clock_simulator') {
+        return `
+          <div class="flex items-center justify-center gap-6 py-1">
+            <div class="w-20 h-20 rounded-full bg-slate-900 border-4 border-teal-400 flex flex-col items-center justify-center font-fredoka font-bold text-white text-base shadow-inner">
+              <span>0${q.startHour}:00</span>
+              <span class="text-[9px] text-teal-400">Jam Masuk</span>
+            </div>
+            <i class="fa-solid fa-arrow-right text-slate-500 text-lg"></i>
+            <div class="w-20 h-20 rounded-full bg-slate-900 border-4 border-amber-400 flex flex-col items-center justify-center font-fredoka font-bold text-white text-base shadow-inner">
+              <span>0${q.currentHour}:00</span>
+              <span class="text-[9px] text-amber-400">Jam VIC</span>
+            </div>
+          </div>
+        `;
+      } else if (q.interactiveType === 'tile_stepper') {
+        return `
+          <div class="w-full overflow-x-auto custom-scrollbar py-2">
+            <div class="flex items-center justify-between min-w-[320px] px-2 border-b-2 border-emerald-500 pb-2">
+              ${[7, 8, 9, 10, 11, 12, 13].map(num => `
+                <div class="flex flex-col items-center">
+                  <span class="text-sm">${num === 8 ? '🏃' : (num === 11 ? '🚩' : '▫️')}</span>
+                  <span class="font-bold text-[11px] ${num === 11 ? 'text-teal-300 font-extrabold' : 'text-slate-400'}">${num}</span>
+                </div>
+              `).join('')}
+            </div>
+            <p class="text-[10px] text-slate-400 text-center mt-2">Ubin awal: 8 ➔ Maju 5 langkah (+5) ➔ Mundur 2 langkah (-2)</p>
+          </div>
+        `;
+      } else if (q.interactiveType === 'balance_scale') {
+        return `
+          <div class="w-full space-y-2">
+            <div class="flex justify-around items-center border-b-2 border-slate-700 pb-2">
+              <div class="text-center bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block font-bold">Kiri (Lengkap)</span>
+                <span class="text-xs font-bold text-teal-300">12 Apel 🍎</span>
+              </div>
+              <i class="fa-solid fa-scale-balanced text-amber-400 text-2xl"></i>
+              <div class="text-center bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block font-bold">Kanan (Baru Ada)</span>
+                <span class="text-xs font-bold text-amber-300">7 Apel 🍎</span>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 text-center">Berapa apel lagi di kanan agar sama dengan 12?</p>
+          </div>
+        `;
+      } else if (q.interactiveType === 'money_change') {
+        return `
+          <div class="flex items-center justify-center gap-4 py-1">
+            <div class="bg-emerald-950/60 p-2 rounded-xl border border-emerald-500/30 text-center">
+              <span class="text-xl block">💵</span>
+              <span class="text-[10px] font-bold text-emerald-300">Uang VIC: Rp10.000</span>
+            </div>
+            <span class="text-slate-500 font-bold">-</span>
+            <div class="bg-rose-950/60 p-2 rounded-xl border border-rose-500/30 text-center">
+              <span class="text-xl block">📘</span>
+              <span class="text-[10px] font-bold text-rose-300">Harga Buku: Rp6.000</span>
+            </div>
+          </div>
+        `;
+      } else if (q.interactiveType === 'ten_frame_donuts') {
+        return `
+          <div class="w-full flex justify-center items-center gap-4">
+            <div class="bg-slate-900 p-2 rounded-2xl border border-slate-800 text-center">
+              <span class="text-xs font-bold text-teal-400 block mb-1">Ten-Frame 1</span>
+              <span class="text-sm tracking-widest block">🍩🍩🍩🍩🍩</span>
+              <span class="text-sm tracking-widest block">🍩🍩🍩🍩🍩</span>
+              <span class="text-[10px] font-bold text-slate-300 block mt-1">(10 Donat)</span>
+            </div>
+            <span class="text-xl font-bold text-amber-400">+</span>
+            <div class="bg-slate-900 p-2 rounded-2xl border border-slate-800 text-center">
+              <span class="text-xs font-bold text-amber-400 block mb-1">Ten-Frame 2</span>
+              <span class="text-sm tracking-widest block">🍩🍩🍩🍩🍩</span>
+              <span class="text-sm tracking-widest block">🍩</span>
+              <span class="text-[10px] font-bold text-slate-300 block mt-1">(6 Donat)</span>
+            </div>
+          </div>
+        `;
+      } else if (q.interactiveType === 'bus_passengers') {
+        return `
+          <div class="w-full text-center space-y-1">
+            <div class="inline-flex items-center gap-2 bg-slate-900 px-4 py-2 rounded-2xl border border-slate-800">
+              <span class="text-2xl">🚌</span>
+              <span class="text-xs font-bold text-slate-200">Awal: 15 Siswa</span>
+              <span class="text-xs font-bold text-rose-400">➔ Turun 4 (-4)</span>
+              <span class="text-xs font-bold text-emerald-400">➔ Naik 3 (+3)</span>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="text-center">
+            <span class="text-4xl block mb-1">${q.icon}</span>
+            <span class="text-xs font-bold text-slate-300">Simulasi Visual Aktivitas Matematika Kontekstual VIC</span>
+          </div>
+        `;
+      }
+    }
+
+    function selectAnswerOption(idx) {
+      if (quizState.isAnswered) return;
+
+      playSound('pop');
+      quizState.selectedOptionIndex = idx;
+      const q = quizState.questions[quizState.currentQuestionIndex];
+
+      q.options.forEach((_, i) => {
+        const btn = document.getElementById(`optionBtn-${i}`);
+        const icon = document.getElementById(`optionCheckIcon-${i}`);
+
+        if (i === idx) {
+          btn.className = "w-full text-left p-3.5 rounded-2xl font-fredoka font-bold text-xs sm:text-sm transition flex items-center justify-between border-2 bg-teal-950/80 border-teal-400 text-white shadow-md";
+          icon.className = "fa-solid fa-circle-dot text-teal-400 text-base";
+        } else {
+          btn.className = "w-full text-left p-3.5 rounded-2xl font-fredoka font-bold text-xs sm:text-sm transition flex items-center justify-between border-2 bg-slate-900/90 border-slate-700 text-slate-300 opacity-60";
+          icon.className = "fa-solid fa-circle text-slate-700 text-base";
+        }
+      });
+
+      const submitBtn = document.getElementById('submitAnswerBtn');
+      submitBtn.disabled = false;
+      submitBtn.className = "w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-fredoka font-bold py-3 rounded-2xl transition text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:scale-102";
+    }
+
+    function submitCurrentAnswer() {
+      if (quizState.selectedOptionIndex === null || quizState.isAnswered) return;
+
+      quizState.isAnswered = true;
+      const q = quizState.questions[quizState.currentQuestionIndex];
+      const selectedOpt = q.options[quizState.selectedOptionIndex];
+      const isCorrect = selectedOpt.isCorrect;
+
+      quizState.userAnswers.push({
+        questionId: q.id,
+        category: q.category,
+        questionText: q.questionText,
+        selectedAnswer: selectedOpt.text,
+        correctAnswer: q.options.find(o => o.isCorrect).text,
+        isCorrect
+      });
+
+      const btn = document.getElementById(`optionBtn-${quizState.selectedOptionIndex}`);
+      const submitBtn = document.getElementById('submitAnswerBtn');
+
+      if (isCorrect) {
+        quizState.score += 10;
+        quizState.coins += 10;
+        document.getElementById('quizScoreText').textContent = `${quizState.score} Pt`;
+        document.getElementById('coinsText').textContent = quizState.coins;
+        localStorage.setItem('kmk_coins', quizState.coins);
+
+        playSound('correct');
+        triggerConfetti();
+        btn.className = "w-full text-left p-3.5 rounded-2xl font-fredoka font-bold text-xs sm:text-sm transition flex items-center justify-between border-2 bg-emerald-900 border-emerald-400 text-white shadow-lg";
+        speakText(`Hebat sekali VIC! Jawaban ${selectedOpt.text} kamu benar!`);
+      } else {
+        playSound('try_again');
+        btn.className = "w-full text-left p-3.5 rounded-2xl font-fredoka font-bold text-xs sm:text-sm transition flex items-center justify-between border-2 bg-rose-900/80 border-rose-500 text-white shadow-lg";
+        speakText(`Hampir tepat VIC. Jawaban yang benar adalah ${q.options.find(o => o.isCorrect).text}.`);
+      }
+
+      submitBtn.innerHTML = `<span>Lanjut Soal Berikutnya</span> <i class="fa-solid fa-arrow-right"></i>`;
+      submitBtn.onclick = advanceToNextQuestion;
+    }
+
+    function advanceToNextQuestion() {
+      if (quizState.currentQuestionIndex + 1 < quizState.questions.length) {
+        quizState.currentQuestionIndex++;
+        renderQuestionScreen();
+      } else {
+        showQuizResultsScreen();
+      }
+    }
+
+    function speakCurrentQuestion() {
+      const q = quizState.questions[quizState.currentQuestionIndex];
+      if (q) {
+        speakText(`${q.category}. ${q.story} ${q.questionText}`);
+      }
+    }
+
+    function showQuizResultsScreen() {
+      const totalCorrect = quizState.userAnswers.filter(a => a.isCorrect).length;
+      const accuracyPercent = Math.round((totalCorrect / quizState.questions.length) * 100);
+
+      // Record History & GAS
+      const record = {
+        date: new Date().toLocaleDateString('id-ID', {day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit'}),
+        score: quizState.score,
+        correctCount: totalCorrect,
+        accuracy: `${accuracyPercent}%`
+      };
+      quizState.quizHistory.unshift(record);
+      localStorage.setItem('kmk_quizHistory', JSON.stringify(quizState.quizHistory));
+
+      if (quizState.gasUrl) {
+        fetch(quizState.gasUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentName: quizState.studentName,
+            score: quizState.score,
+            correctCount: totalCorrect,
+            totalQuestions: quizState.questions.length,
+            accuracy: `${accuracyPercent}%`,
+            status: 'Selesai Kuis'
+          })
+        }).catch(err => console.log('GAS Sync error:', err));
+      }
+
+      speakText(`Luar biasa VIC! Kuis selesai! Kamu mendapatkan nilai ${quizState.score} poin dengan akurasi ${accuracyPercent} persen!`);
+
+      const main = document.getElementById('mainView');
+      main.innerHTML = `
+        <div class="space-y-5 max-w-2xl mx-auto w-full my-auto animate-fade-in text-center">
+          
+          <!-- RESULT HEADER CARD -->
+          <div class="bg-gradient-to-br from-indigo-900 via-slate-800 to-teal-900 border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div class="w-20 h-20 rounded-full bg-amber-400 border-4 border-white flex items-center justify-center text-4xl mx-auto shadow-lg animate-bounce-soft">
+              🏆
+            </div>
+
+            <div>
+              <span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-500/30">Laporan Hasil Kuis Almazaya</span>
+              <h2 class="font-fredoka text-2xl sm:text-3xl font-bold text-white mt-2">Selamat, ${quizState.studentName}! 🎉</h2>
+              <p class="text-xs text-slate-300 mt-1">Mr. Taqwa sangat bangga dengan hasil usahamu hari ini!</p>
+            </div>
+
+            <!-- SCORE STATS GRID -->
+            <div class="grid grid-cols-3 gap-3 pt-2">
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 font-bold block">Total Skor:</span>
+                <span class="font-fredoka text-xl font-bold text-amber-300">${quizState.score} Pt</span>
+              </div>
+
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 font-bold block">Jawaban Benar:</span>
+                <span class="font-fredoka text-xl font-bold text-emerald-400">${totalCorrect}/${quizState.questions.length}</span>
+              </div>
+
+              <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 font-bold block">Tingkat Akurasi:</span>
+                <span class="font-fredoka text-xl font-bold text-teal-300">${accuracyPercent}%</span>
+              </div>
+            </div>
+
+            <!-- REPLAY OR RETURN BUTTONS -->
+            <div class="pt-3 flex flex-wrap gap-3 justify-center">
+              <button onclick="startQuizGame()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-fredoka font-bold text-xs px-5 py-3 rounded-2xl shadow-lg transition flex items-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i> Ulangi Kuis Lagi
+              </button>
+              <button onclick="showLobbyScreen()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-fredoka font-bold text-xs px-5 py-3 rounded-2xl transition flex items-center gap-2 border border-slate-700">
+                <i class="fa-solid fa-house"></i> Kembali ke Menu
               </button>
             </div>
-            <div class="absolute -right-2 -bottom-4 w-32 h-32 flex items-center justify-center text-7xl opacity-90 pointer-events-none select-none">
-              ✍️
+          </div>
+
+          <!-- DETAILED ANSWER BREAKDOWN -->
+          <div class="bg-slate-800/90 border border-slate-700/80 rounded-3xl p-4 text-left space-y-2">
+            <h4 class="font-fredoka text-xs font-bold text-slate-300 mb-2">Rincian Jawaban Soal:</h4>
+            <div class="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar text-xs">
+              ${quizState.userAnswers.map((ans, idx) => `
+                <div class="p-2.5 rounded-xl border flex items-center justify-between ${ans.isCorrect ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300' : 'bg-rose-950/40 border-rose-500/30 text-rose-300'}">
+                  <div>
+                    <span class="font-bold">${idx + 1}. ${ans.category}</span>
+                    <p class="text-[10px] text-slate-400">${ans.questionText}</p>
+                  </div>
+                  <div class="text-right shrink-0 ml-2">
+                    <span class="font-bold block">${ans.selectedAnswer}</span>
+                    <span class="text-[9px] ${ans.isCorrect ? 'text-emerald-400' : 'text-rose-400'}">${ans.isCorrect ? '✓ Benar' : '✗ Kunci: ' + ans.correctAnswer}</span>
+                  </div>
+                </div>
+              `).join('')}
             </div>
           </div>
 
-          <!-- QUICK EXPLORE MODULES -->
-          <div>
-            <div class="flex justify-between items-center mb-3">
-              <h3 class="font-fredoka text-base font-bold text-slate-800">✨ Fitur Latihan Interaktif</h3>
-              <span onclick="switchTab('adventure')" class="text-xs text-teal-600 font-bold cursor-pointer hover:underline">Semua Modul <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div onclick="switchTab('scratchpad')" class="bg-amber-50 border border-amber-200 rounded-3xl p-4 flex flex-col justify-between cursor-pointer hover:border-amber-300 transition shadow-sm group">
-                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
-                  🎨
-                </div>
-                <div>
-                  <h4 class="font-fredoka text-sm font-bold text-slate-800">Papan Tulis Bebas</h4>
-                  <p class="text-[11px] text-slate-500 mt-0.5">Menulis angka & corat-coret</p>
-                </div>
-              </div>
-
-              <div onclick="startSpecificActivity(2, 6)" class="bg-emerald-50 border border-emerald-100 rounded-3xl p-4 flex flex-col justify-between cursor-pointer hover:border-emerald-300 transition shadow-sm group">
-                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
-                  🦘
-                </div>
-                <div>
-                  <h4 class="font-fredoka text-sm font-bold text-slate-800">Garis Bilangan</h4>
-                  <p class="text-[11px] text-slate-500 mt-0.5">Lompatan Karakter 0-20</p>
-                </div>
-              </div>
-
-              <div onclick="startSpecificActivity(3, 11)" class="bg-indigo-50 border border-indigo-100 rounded-3xl p-4 flex flex-col justify-between cursor-pointer hover:border-indigo-300 transition shadow-sm group">
-                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
-                  ⚖️
-                </div>
-                <div>
-                  <h4 class="font-fredoka text-sm font-bold text-slate-800">Timbangan Penjumlahan</h4>
-                  <p class="text-[11px] text-slate-500 mt-0.5">Menyeimbangkan nilai</p>
-                </div>
-              </div>
-
-              <div onclick="startSpecificActivity(4, 16)" class="bg-purple-50 border border-purple-100 rounded-3xl p-4 flex flex-col justify-between cursor-pointer hover:border-purple-300 transition shadow-sm group">
-                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
-                  ⏰
-                </div>
-                <div>
-                  <h4 class="font-fredoka text-sm font-bold text-slate-800">Jam & Uang Rupiah</h4>
-                  <p class="text-[11px] text-slate-500 mt-0.5">Keterampilan harian</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       `;
     }
 
-    function renderAdventureView(container) {
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="text-center space-y-1">
-            <h2 class="font-fredoka text-xl font-bold text-slate-800">🗺️ Peta Petualangan Level 2</h2>
-            <p class="text-xs text-slate-500 font-semibold">Almazaya Islamic School • Kelas 7 Adaptif</p>
-          </div>
+    let scratchpadColor = '#2dd4bf';
 
-          <!-- LEVEL PATH GRID -->
-          <div class="relative space-y-3 py-1">
-            ${generateAdventurePathHTML()}
-          </div>
-        </div>
-      `;
+    function toggleScratchpadOverlay() {
+      const modal = document.getElementById('scratchpadModal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        setTimeout(() => initScratchpadCanvas(), 80);
+      }
     }
 
-    function generateAdventurePathHTML() {
-      const worlds = [
-        { name: 'Dunia 1: Hutan Penulisan', levels: [1,2,3,4,5], color: 'bg-blue-500', icon: '✍️' },
-        { name: 'Dunia 2: Lembah Garis Bilangan', levels: [6,7,8,9,10], color: 'bg-emerald-500', icon: '🦘' },
-        { name: 'Dunia 3: Sungai Timbangan', levels: [11,12,13,14,15], color: 'bg-indigo-500', icon: '⚖️' },
-        { name: 'Dunia 4: Istana Jam & Uang', levels: [16,17,18,19,20], color: 'bg-purple-500', icon: '⏰' }
-      ];
-
-      return worlds.map((w) => `
-        <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-base">${w.icon}</span>
-              <h3 class="font-fredoka text-xs font-bold text-slate-800">${w.name}</h3>
-            </div>
-            <span class="text-[10px] font-bold text-slate-400">Level ${w.levels[0]} - ${w.levels[4]}</span>
-          </div>
-          <div class="grid grid-cols-5 gap-2">
-            ${w.levels.map(lvl => {
-              const isUnlocked = lvl <= state.unlockedLevel;
-              return `
-                <button onclick="${isUnlocked ? `startSpecificActivityByLevel(${lvl})` : 'speakLockedLevel()'}" 
-                  class="h-12 rounded-2xl flex flex-col items-center justify-center font-fredoka font-bold text-xs transition shadow-sm
-                  ${isUnlocked ? `${w.color} text-white hover:scale-105 active:scale-95` : 'bg-slate-100 text-slate-400 cursor-not-allowed'}"
-                  title="${isUnlocked ? `Mulai Level ${lvl}` : 'Level Terkunci'}">
-                  <span>${lvl}</span>
-                  ${isUnlocked ? '<i class="fa-solid fa-star text-[9px] text-yellow-300"></i>' : '<i class="fa-solid fa-lock text-[9px]"></i>'}
-                </button>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function speakLockedLevel() {
-      speakText('Level ini masih terkunci. Selesaikan level sebelumnya bersama Mr. Taqwa ya, VIC!');
-    }
-
-    function renderScratchpadView(container) {
-      speakText('Ini papan tulis bebas VIC! Kamu bisa latihan menulis angka apa saja di sini!');
-
-      container.innerHTML = `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h2 class="font-fredoka text-base font-bold text-slate-800 flex items-center gap-2">
-              <span>🎨 Papan Tulis Bebas VIC</span>
-            </h2>
-            <button onclick="speakText('Gunakan jarimu untuk menulis angka di papan ini!')" class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-              <i class="fa-solid fa-volume-high text-xs"></i>
-            </button>
-          </div>
-
-          <div class="bg-white border-2 border-slate-200 rounded-3xl p-3 shadow-sm space-y-3">
-            <div class="relative bg-slate-900 rounded-2xl p-1 flex justify-center items-center">
-              <canvas id="scratchpadCanvas" width="300" height="280" class="interactive-canvas rounded-xl border border-slate-800"></canvas>
-            </div>
-
-            <!-- CONTROLS & COLORS -->
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex gap-2">
-                <button onclick="setScratchColor('#2dd4bf')" class="w-7 h-7 rounded-full bg-teal-400 ring-2 ring-white shadow-sm"></button>
-                <button onclick="setScratchColor('#f59e0b')" class="w-7 h-7 rounded-full bg-amber-400 ring-2 ring-white shadow-sm"></button>
-                <button onclick="setScratchColor('#f43f5e')" class="w-7 h-7 rounded-full bg-rose-400 ring-2 ring-white shadow-sm"></button>
-                <button onclick="setScratchColor('#a855f7')" class="w-7 h-7 rounded-full bg-purple-400 ring-2 ring-white shadow-sm"></button>
-              </div>
-
-              <div class="flex gap-2">
-                <button onclick="clearScratchpad()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1">
-                  <i class="fa-solid fa-rotate-right"></i> Bersihkan
-                </button>
-                <button onclick="saveScratchpadReward()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs transition flex items-center gap-1 shadow-md">
-                  <i class="fa-solid fa-star text-amber-300"></i> Simpan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => initScratchpadCanvas(), 100);
-    }
-
-    let scratchColor = '#2dd4bf';
-
-    function setScratchColor(color) {
-      scratchColor = color;
-      playSoundEffect('pop');
+    function setScratchpadColor(color) {
+      scratchpadColor = color;
+      playSound('pop');
     }
 
     function initScratchpadCanvas() {
       const canvas = document.getElementById('scratchpadCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#0f172a';
+      
+      // Clear
+      ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw faint baseline guides for writing
-      ctx.strokeStyle = '#334155';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([6, 6]);
-      ctx.beginPath();
-      ctx.moveTo(10, 140);
-      ctx.lineTo(290, 140);
-      ctx.stroke();
-      ctx.setLineDash([]);
+      // Faint grid lines for math calculation
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 30) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
 
       let drawing = false;
 
-      const startDraw = (e) => {
+      const getPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (canvas.width / rect.width),
+          y: (clientY - rect.top) * (canvas.height / rect.height)
+        };
+      };
+
+      const start = (e) => {
         drawing = true;
-        const pos = getCanvasPos(canvas, e);
+        const pos = getPos(e);
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
       };
 
-      const doDraw = (e) => {
+      const draw = (e) => {
         if (!drawing) return;
-        const pos = getCanvasPos(canvas, e);
-        ctx.strokeStyle = scratchColor;
-        ctx.lineWidth = 10;
+        const pos = getPos(e);
+        ctx.strokeStyle = scratchpadColor;
+        ctx.lineWidth = 6;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
       };
 
-      const stopDraw = () => { drawing = false; };
+      const stop = () => { drawing = false; };
 
-      canvas.addEventListener('mousedown', startDraw);
-      canvas.addEventListener('mousemove', doDraw);
-      canvas.addEventListener('mouseup', stopDraw);
+      canvas.onmousedown = start;
+      canvas.onmousemove = draw;
+      canvas.onmouseup = stop;
 
-      canvas.addEventListener('touchstart', (e) => { startDraw(e.touches[0]); e.preventDefault(); });
-      canvas.addEventListener('touchmove', (e) => { doDraw(e.touches[0]); e.preventDefault(); });
-      canvas.addEventListener('touchend', stopDraw);
+      canvas.ontouchstart = (e) => { start(e); e.preventDefault(); };
+      canvas.ontouchmove = (e) => { draw(e); e.preventDefault(); };
+      canvas.ontouchend = stop;
     }
 
-    function clearScratchpad() {
+    function clearScratchpadCanvas() {
       initScratchpadCanvas();
-      playSoundEffect('pop');
-    }
-
-    function saveScratchpadReward() {
-      playSoundEffect('success');
-      triggerConfetti();
-      speakText('Tulisan angka VIC bagus sekali! Mr. Taqwa bangga!');
-    }
-
-    function renderRewardsView(container) {
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="text-center space-y-1">
-            <h2 class="font-fredoka text-xl font-bold text-slate-800">🏆 Album Stiker & Hadiah VIC</h2>
-            <p class="text-xs text-slate-500">Gunakan koin latihanmu untuk membuka stiker baru!</p>
-          </div>
-
-          <div class="bg-amber-50 border border-amber-200 rounded-3xl p-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <i class="fa-solid fa-coins text-amber-500 text-xl"></i>
-              <div>
-                <span class="text-xs text-slate-500 font-bold block">Koin Latihan:</span>
-                <span class="font-fredoka text-base font-bold text-amber-800">${state.coins} Koin</span>
-              </div>
-            </div>
-            <button onclick="buySticker()" class="bg-amber-500 hover:bg-amber-600 text-white font-fredoka font-bold text-xs px-3.5 py-2 rounded-2xl shadow-md transition flex items-center gap-1.5">
-              <i class="fa-solid fa-bag-shopping"></i> Beli Stiker (50 Koin)
-            </button>
-          </div>
-
-          <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm space-y-3">
-            <h3 class="font-fredoka text-sm font-bold text-slate-800">Koleksi Stiker Dibuka:</h3>
-            <div id="stickerCollectionGrid" class="grid grid-cols-4 gap-3 min-h-[120px]">
-              ${state.unlockedStickers.map(stk => `
-                <div class="w-14 h-14 rounded-2xl bg-slate-50 border-2 border-amber-300 flex items-center justify-center text-3xl shadow-xs animate-bounce-soft">
-                  ${stk}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function buySticker() {
-      if (state.coins >= 50) {
-        const catalog = ['🦊', '🐼', '🦖', '🦄', '🐸', '🚀', '⭐', '🎈', '🦉', '🐬'];
-        const locked = catalog.filter(s => !state.unlockedStickers.includes(s));
-        if (locked.length > 0) {
-          const newSticker = locked[0];
-          state.coins -= 50;
-          state.unlockedStickers.push(newSticker);
-          localStorage.setItem('ka2_coins', state.coins);
-          localStorage.setItem('ka2_stickers', JSON.stringify(state.unlockedStickers));
-          document.getElementById('coinCount').textContent = state.coins;
-          playSoundEffect('success');
-          triggerConfetti();
-          speakText(`Hore! VIC berhasil membuka stiker baru ${newSticker}!`);
-          renderRewardsView(document.getElementById('mainView'));
-        } else {
-          speakText('Selamat VIC! Semua stiker sudah berhasil kamu dapatkan!');
-        }
-      } else {
-        speakText('Koin latihanmu belum cukup. Yuk selesaikan 1 level lagi bersama Mr. Taqwa!');
-      }
-    }
-
-    function startSpecificActivityByLevel(levelNum) {
-      let worldNum = 1;
-      if (levelNum > 15) worldNum = 4;
-      else if (levelNum > 10) worldNum = 3;
-      else if (levelNum > 5) worldNum = 2;
-
-      startSpecificActivity(worldNum, levelNum);
-    }
-
-    function startSpecificActivity(worldNum, levelNum) {
-      state.currentActivity = { worldNum, levelNum };
-      const mainView = document.getElementById('mainView');
-
-      if (worldNum === 1) renderTracingActivityV2(mainView, levelNum);
-      else if (worldNum === 2) renderNumberLineActivity(mainView, levelNum);
-      else if (worldNum === 3) renderBalanceActivity(mainView, levelNum);
-      else if (worldNum === 4) renderClockMoneyActivity(mainView, levelNum);
-    }
-
-    /* WORLD 1: TRACING MULTI-DIGIT & SYMBOLS */
-    function renderTracingActivityV2(container, level) {
-      const targetText = level <= 3 ? (10 + level).toString() : (level === 4 ? "+" : "=");
-      speakText(`Yuk, tebalkan simbol ${targetText} ini dengan jarimu, VIC!`);
-
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <button onclick="switchTab('home')" class="w-9 h-9 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span class="font-fredoka text-xs font-bold text-slate-700">Dunia 1: Level ${level} (Menulis V2)</span>
-            <button onclick="speakText('Tebalkan dengan jarimu secara perlahan')" class="w-9 h-9 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center hover:bg-teal-200">
-              <i class="fa-solid fa-volume-high"></i>
-            </button>
-          </div>
-
-          <div class="bg-blue-50 border border-blue-200 rounded-3xl p-3.5 flex items-center gap-3">
-            <div class="text-3xl">✍️</div>
-            <div>
-              <h3 class="font-fredoka text-xs font-bold text-slate-800">Tebalkan Tulisan: "${targetText}"</h3>
-              <p class="text-[10px] text-slate-500">Ikuti garis bantu tebal dengan jari atau mouse secara teratur.</p>
-            </div>
-          </div>
-
-          <!-- TRACING CANVAS CONTAINER -->
-          <div class="relative bg-white border-2 border-slate-200 rounded-3xl p-2 flex flex-col items-center justify-center shadow-inner min-h-[290px]">
-            <canvas id="tracingCanvasV2" width="280" height="250" class="interactive-canvas rounded-2xl bg-slate-50 border border-dashed border-slate-300"></canvas>
-            <div class="mt-3 flex gap-2 w-full px-2">
-              <button onclick="clearTracingCanvasV2('${targetText}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1">
-                <i class="fa-solid fa-rotate-right"></i> Hapus
-              </button>
-              <button onclick="verifyTracingResultV2('${targetText}', ${level})" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1 shadow-md">
-                <i class="fa-solid fa-check"></i> Selesai
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => initTracingCanvasV2(targetText), 100);
-    }
-
-    function initTracingCanvasV2(targetText) {
-      const canvas = document.getElementById('tracingCanvasV2');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.font = 'bold 140px Fredoka';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillText(targetText, canvas.width / 2, canvas.height / 2 + 5);
-
-      ctx.lineWidth = 12;
-      ctx.strokeStyle = '#cbd5e1';
-      ctx.setLineDash([8, 8]);
-      ctx.strokeText(targetText, canvas.width / 2, canvas.height / 2 + 5);
-      ctx.setLineDash([]);
-
-      let drawing = false;
-
-      const startDraw = (e) => {
-        drawing = true;
-        const pos = getCanvasPos(canvas, e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-      };
-
-      const doDraw = (e) => {
-        if (!drawing) return;
-        const pos = getCanvasPos(canvas, e);
-        ctx.strokeStyle = '#6366f1';
-        ctx.lineWidth = 16;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-      };
-
-      const stopDraw = () => { drawing = false; };
-
-      canvas.addEventListener('mousedown', startDraw);
-      canvas.addEventListener('mousemove', doDraw);
-      canvas.addEventListener('mouseup', stopDraw);
-
-      canvas.addEventListener('touchstart', (e) => { startDraw(e.touches[0]); e.preventDefault(); });
-      canvas.addEventListener('touchmove', (e) => { doDraw(e.touches[0]); e.preventDefault(); });
-      canvas.addEventListener('touchend', stopDraw);
-    }
-
-    function clearTracingCanvasV2(targetText) {
-      initTracingCanvasV2(targetText);
-    }
-
-    function verifyTracingResultV2(targetText, level) {
-      playSoundEffect('success');
-      triggerConfetti();
-      speakText(`Hebat sekali VIC! Kamu berhasil menebalkan ${targetText}!`);
-      recordAndAdvance('Hutan Penulisan', level, 100, 3, '98%');
-    }
-
-    /* WORLD 2: INTERACTIVE NUMBER LINE (GARIS BILANGAN) */
-    let currentLinePos = 5;
-
-    function renderNumberLineActivity(container, level) {
-      const startPos = 5;
-      const jumpSteps = level - 5;
-      const targetPos = startPos + jumpSteps;
-      currentLinePos = startPos;
-
-      speakText(`Lompatkan hewan dari angka 5 sebanyak ${jumpSteps} langkah ke kanan!`);
-
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <button onclick="switchTab('home')" class="w-9 h-9 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span class="font-fredoka text-xs font-bold text-slate-700">Dunia 2: Level ${level} (Garis Bilangan)</span>
-            <button onclick="speakText('Tekan tombol tambah satu untuk melompat')" class="w-9 h-9 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-              <i class="fa-solid fa-volume-high"></i>
-            </button>
-          </div>
-
-          <div class="bg-emerald-50 border border-emerald-200 rounded-3xl p-3.5 flex items-center gap-3">
-            <div class="text-3xl">🦘</div>
-            <div>
-              <h3 class="font-fredoka text-xs font-bold text-slate-800">Lompat Ke Angka ${targetPos}</h3>
-              <p class="text-[10px] text-slate-500">Mulai dari angka ${startPos}, lompat maju ${jumpSteps} kali!</p>
-            </div>
-          </div>
-
-          <!-- INTERACTIVE NUMBER LINE -->
-          <div class="bg-white border-2 border-slate-200 rounded-3xl p-4 space-y-6 shadow-sm overflow-x-auto custom-scrollbar">
-            <div class="flex items-center justify-between min-w-[340px] px-2 relative pt-8 pb-4 border-b-4 border-emerald-500">
-              ${Array.from({length: 11}).map((_, i) => {
-                const num = i + 5;
-                return `
-                  <div class="flex flex-col items-center relative">
-                    <div id="lineMascot-${num}" class="absolute -top-10 text-2xl transition-all duration-300 ${num === currentLinePos ? 'scale-125 opacity-100' : 'opacity-0'}">
-                      🦁
-                    </div>
-                    <div class="w-3 h-3 bg-emerald-600 rounded-full my-1"></div>
-                    <span class="font-fredoka font-bold text-xs ${num === targetPos ? 'text-indigo-600 text-sm' : 'text-slate-600'}">${num}</span>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div class="flex items-center justify-center gap-4">
-              <button onclick="moveLineMascot(-1)" class="w-12 h-12 rounded-2xl bg-rose-100 hover:bg-rose-200 text-rose-700 font-fredoka font-bold text-lg flex items-center justify-center shadow-sm">
-                -1
-              </button>
-              <div class="text-center">
-                <span class="text-[10px] text-slate-400 font-bold block">Posisi Sekarang:</span>
-                <span id="linePosDisplay" class="font-fredoka text-xl font-bold text-emerald-700">${currentLinePos}</span>
-              </div>
-              <button onclick="moveLineMascot(1)" class="w-12 h-12 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-fredoka font-bold text-lg flex items-center justify-center shadow-sm">
-                +1
-              </button>
-            </div>
-          </div>
-
-          <button onclick="verifyNumberLineResult(${targetPos}, ${level})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-fredoka font-bold py-3 rounded-2xl shadow-md transition">
-            <i class="fa-solid fa-flag-checkered mr-1"></i> Periksa Jawaban
-          </button>
-        </div>
-      `;
-    }
-
-    function moveLineMascot(dir) {
-      const next = currentLinePos + dir;
-      if (next >= 5 && next <= 15) {
-        playSoundEffect('jump');
-        document.getElementById(`lineMascot-${currentLinePos}`).classList.add('opacity-0');
-        currentLinePos = next;
-        document.getElementById(`lineMascot-${currentLinePos}`).classList.remove('opacity-0');
-        document.getElementById('linePosDisplay').textContent = currentLinePos;
-      }
-    }
-
-    function verifyNumberLineResult(targetPos, level) {
-      if (currentLinePos === targetPos) {
-        playSoundEffect('success');
-        triggerConfetti();
-        speakText(`Pintar VIC! Kamu mendarat tepat di angka ${targetPos}!`);
-        recordAndAdvance('Lembah Garis Bilangan', level, 100, 3, '100%');
-      } else {
-        speakText(`Ayo coba lagi VIC! Target lompatan adalah angka ${targetPos}`);
-      }
-    }
-
-    /* WORLD 3: BALANCE SCALE & TEN-FRAMES */
-    let leftWeight = 3;
-    let rightWeight = 0;
-
-    function renderBalanceActivity(container, level) {
-      leftWeight = 5;
-      rightWeight = 0;
-      const targetTotal = 5;
-
-      speakText(`Tambahkan apel di sebelah kanan agar timbangan menjadi seimbang!`);
-
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <button onclick="switchTab('home')" class="w-9 h-9 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span class="font-fredoka text-xs font-bold text-slate-700">Dunia 3: Level ${level} (Timbangan)</span>
-            <button onclick="speakText('Samakan jumlah apel kiri dan kanan')" class="w-9 h-9 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
-              <i class="fa-solid fa-volume-high"></i>
-            </button>
-          </div>
-
-          <div class="bg-indigo-50 border border-indigo-200 rounded-3xl p-3.5 flex items-center gap-3">
-            <div class="text-3xl">⚖️</div>
-            <div>
-              <h3 class="font-fredoka text-xs font-bold text-slate-800">Seimbangkan Timbangan (${targetTotal} Apel)</h3>
-              <p class="text-[10px] text-slate-500">Sentuh tombol tambah apel kanan sampai lurus seimbang!</p>
-            </div>
-          </div>
-
-          <!-- VISUAL BALANCE SCALE GRAPHIC -->
-          <div class="bg-white border-2 border-slate-200 rounded-3xl p-4 flex flex-col items-center justify-center min-h-[220px] relative shadow-sm">
-            <div id="scaleArm" class="scale-arm w-full flex justify-between items-center px-6 relative border-b-4 border-slate-700 pb-2">
-              <!-- LEFT PAN -->
-              <div class="flex flex-col items-center">
-                <div id="leftPanContent" class="flex gap-1 bg-amber-100 p-2 rounded-2xl border border-amber-300 min-w-[70px] justify-center">
-                  🍎🍎🍎🍎🍎
-                </div>
-                <span class="font-fredoka text-xs font-bold text-slate-700 mt-1">Sisi Kiri: 5</span>
-              </div>
-
-              <div class="w-6 h-12 bg-slate-800 rounded-t-full"></div>
-
-              <!-- RIGHT PAN -->
-              <div class="flex flex-col items-center">
-                <div id="rightPanContent" class="flex gap-1 bg-amber-100 p-2 rounded-2xl border border-amber-300 min-w-[70px] justify-center min-h-[44px]">
-                  <!-- Rendered dynamically -->
-                </div>
-                <span id="rightPanText" class="font-fredoka text-xs font-bold text-slate-700 mt-1">Sisi Kanan: 0</span>
-              </div>
-            </div>
-
-            <div class="mt-6 flex items-center gap-3">
-              <button onclick="addRightApple(-1)" class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-700 font-bold text-lg flex items-center justify-center">
-                -
-              </button>
-              <span class="font-fredoka text-sm font-bold text-slate-800">Tambah Apel Kanan</span>
-              <button onclick="addRightApple(1)" class="w-10 h-10 rounded-2xl bg-indigo-600 text-white font-bold text-lg flex items-center justify-center shadow-md">
-                +
-              </button>
-            </div>
-          </div>
-
-          <button onclick="verifyBalanceResult(${targetTotal}, ${level})" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-fredoka font-bold py-3 rounded-2xl shadow-md transition">
-            <i class="fa-solid fa-check mr-1"></i> Periksa Timbangan
-          </button>
-        </div>
-      `;
-    }
-
-    function addRightApple(delta) {
-      if (rightWeight + delta >= 0 && rightWeight + delta <= 8) {
-        rightWeight += delta;
-        playSoundEffect('pop');
-        const pan = document.getElementById('rightPanContent');
-        pan.innerHTML = Array.from({length: rightWeight}).map(() => '🍎').join('');
-        document.getElementById('rightPanText').textContent = `Sisi Kanan: ${rightWeight}`;
-
-        // Rotate scale arm visually
-        const arm = document.getElementById('scaleArm');
-        const diff = leftWeight - rightWeight;
-        arm.style.transform = `rotate(${diff * 3}deg)`;
-      }
-    }
-
-    function verifyBalanceResult(targetTotal, level) {
-      if (rightWeight === targetTotal) {
-        playSoundEffect('success');
-        triggerConfetti();
-        speakText('Luar biasa VIC! Timbangan sudah seimbang!');
-        recordAndAdvance('Sungai Timbangan', level, 100, 3, '100%');
-      } else {
-        speakText('Timbangan belum lurus seimbang. Yuk paskan jumlah apelnya!');
-      }
-    }
-
-    /* WORLD 4: CLOCK & RUPIAH MONEY */
-    function renderClockMoneyActivity(container, level) {
-      const targetHour = 7;
-      speakText(`Pilih jam yang menunjukkan tepat pukul 7 pagi untuk berangkat sekolah!`);
-
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <button onclick="switchTab('home')" class="w-9 h-9 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <span class="font-fredoka text-xs font-bold text-slate-700">Dunia 4: Level ${level} (Mengenal Jam)</span>
-            <button onclick="speakText('Pilih jam 7 tepat')" class="w-9 h-9 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center">
-              <i class="fa-solid fa-volume-high"></i>
-            </button>
-          </div>
-
-          <div class="bg-purple-50 border border-purple-200 rounded-3xl p-3.5 flex items-center gap-3">
-            <div class="text-3xl">⏰</div>
-            <div>
-              <h3 class="font-fredoka text-xs font-bold text-slate-800">Jam Sekolah VIC (07:00)</h3>
-              <p class="text-[10px] text-slate-500">Pilih gambar jam dinding yang jarum pendeknya menunjuk angka 7!</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <button onclick="checkClockAnswer(7, 7, ${level})" class="bg-white border-2 border-slate-200 hover:border-purple-500 rounded-3xl p-4 flex flex-col items-center space-y-2 transition shadow-sm">
-              <div class="w-20 h-20 rounded-full bg-purple-50 border-4 border-purple-400 flex items-center justify-center font-fredoka font-bold text-xl text-purple-800 shadow-inner">
-                07:00
-              </div>
-              <span class="font-fredoka text-xs font-bold text-slate-700">Pukul 7 Tepat</span>
-            </button>
-
-            <button onclick="checkClockAnswer(10, 7, ${level})" class="bg-white border-2 border-slate-200 hover:border-purple-500 rounded-3xl p-4 flex flex-col items-center space-y-2 transition shadow-sm">
-              <div class="w-20 h-20 rounded-full bg-purple-50 border-4 border-purple-400 flex items-center justify-center font-fredoka font-bold text-xl text-purple-800 shadow-inner">
-                10:00
-              </div>
-              <span class="font-fredoka text-xs font-bold text-slate-700">Pukul 10 Tepat</span>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function checkClockAnswer(selected, correct, level) {
-      if (selected === correct) {
-        playSoundEffect('success');
-        triggerConfetti();
-        speakText('Tepat sekali VIC! Jam 7 pagi adalah waktu berangkat sekolah!');
-        recordAndAdvance('Istana Jam & Uang', level, 100, 3, '100%');
-      } else {
-        speakText('Coba perhatikan angkanya sekali lagi ya VIC!');
-      }
-    }
-
-    function recordAndAdvance(worldName, completedLevel, score, stars, accuracy) {
-      if (completedLevel >= state.unlockedLevel && state.unlockedLevel < 20) {
-        state.unlockedLevel = completedLevel + 1;
-        localStorage.setItem('ka2_unlockedLevel', state.unlockedLevel);
-      }
-
-      state.coins += 20;
-      localStorage.setItem('ka2_coins', state.coins);
-      document.getElementById('coinCount').textContent = state.coins;
-
-      const record = {
-        date: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-        world: worldName,
-        level: completedLevel,
-        score,
-        stars,
-        accuracy
-      };
-
-      state.scoresHistory.unshift(record);
-      localStorage.setItem('ka2_scoresHistory', JSON.stringify(state.scoresHistory));
-
-      if (state.gasUrl) {
-        fetch(state.gasUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            schoolName: state.schoolName,
-            teacherName: state.teacherName,
-            studentName: state.studentName,
-            worldName,
-            level: completedLevel,
-            score,
-            stars,
-            accuracy,
-            status: 'Selesai V2'
-          })
-        }).catch(err => console.log('GAS Sync V2 error:', err));
-      }
-
-      setTimeout(() => {
-        switchTab('adventure');
-      }, 1600);
-    }
-
-    function getCanvasPos(canvas, evt) {
-      const rect = canvas.getBoundingClientRect();
-      return {
-        x: (evt.clientX - rect.left) * (canvas.width / rect.width),
-        y: (evt.clientY - rect.top) * (canvas.height / rect.height)
-      };
+      playSound('pop');
     }
 
     function openTeacherModal() {
-      document.getElementById('teacherStudentName').value = state.studentName;
-      document.getElementById('gasUrlInput').value = state.gasUrl;
-      document.getElementById('teacherUnlockLevelSelect').value = state.unlockedLevel > 20 ? 20 : state.unlockedLevel;
-      renderScoreHistory();
+      document.getElementById('teacherStudentName').value = quizState.studentName;
+      document.getElementById('gasUrlInput').value = quizState.gasUrl;
+      renderQuizHistoryList();
       document.getElementById('teacherModal').classList.remove('hidden');
     }
 
@@ -1277,23 +1146,54 @@ function doPost(e) {
     }
 
     function saveTeacherSettings() {
-      state.studentName = document.getElementById('teacherStudentName').value || 'VIC';
-      state.gasUrl = document.getElementById('gasUrlInput').value.trim();
+      quizState.studentName = document.getElementById('teacherStudentName').value || 'VIC';
+      quizState.gasUrl = document.getElementById('gasUrlInput').value.trim();
 
-      localStorage.setItem('ka2_studentName', state.studentName);
-      localStorage.setItem('ka2_gasUrl', state.gasUrl);
+      localStorage.setItem('kmk_studentName', quizState.studentName);
+      localStorage.setItem('kmk_gasUrl', quizState.gasUrl);
 
-      document.getElementById('studentNameText').textContent = state.studentName;
+      document.getElementById('studentNameText').textContent = quizState.studentName;
       closeTeacherModal();
     }
 
-    function updateLevelOverride(val) {
-      state.unlockedLevel = parseInt(val);
-      localStorage.setItem('ka2_unlockedLevel', state.unlockedLevel);
+    function renderQuizHistoryList() {
+      const container = document.getElementById('quizHistoryList');
+      if (quizState.quizHistory.length === 0) {
+        container.innerHTML = `<p class="text-slate-500 text-[11px] text-center py-2">Belum ada riwayat hasil kuis.</p>`;
+        return;
+      }
+
+      container.innerHTML = quizState.quizHistory.map(h => `
+        <div class="bg-slate-950 p-2 rounded-xl flex justify-between items-center border border-slate-800">
+          <div>
+            <span class="font-bold text-white text-xs">${h.date}</span>
+            <p class="text-[10px] text-slate-400">Akurasi: ${h.accuracy} (${h.correctCount}/10)</p>
+          </div>
+          <span class="font-bold text-amber-400 text-xs">${h.score} Pt</span>
+        </div>
+      `).join('');
+    }
+
+    function clearQuizHistory() {
+      quizState.quizHistory = [];
+      localStorage.removeItem('kmk_quizHistory');
+      renderQuizHistoryList();
+    }
+
+    function copyGasCode() {
+      const code = document.getElementById('gasCodeText').value;
+      navigator.clipboard.writeText(code);
+      alert('Kode Apps Script Spreadsheet berhasil disalin!');
     }
 
     function openStudentProfileModal() {
-      renderAvatarPicker();
+      const grid = document.getElementById('avatarPickerGrid');
+      const emojis = ['🦁', '🦊', '🐼', '🦖', '🦄', '🐸', '🚀', '⭐'];
+      grid.innerHTML = emojis.map(e => `
+        <button onclick="selectStudentAvatar('${e}')" class="w-12 h-12 text-2xl rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center transition hover:scale-105">
+          ${e}
+        </button>
+      `).join('');
       document.getElementById('studentProfileModal').classList.remove('hidden');
     }
 
@@ -1301,75 +1201,37 @@ function doPost(e) {
       document.getElementById('studentProfileModal').classList.add('hidden');
     }
 
-    function renderAvatarPicker() {
-      const grid = document.getElementById('avatarPickerGrid');
-      const emojis = ['🦁', '🦊', '🐼', '🦖', '🦄', '🐸', '🚀', '⭐'];
-      grid.innerHTML = emojis.map(e => `
-        <button onclick="selectAvatar('${e}')" class="w-14 h-14 text-2xl rounded-2xl bg-amber-50 hover:bg-amber-200 border-2 border-amber-300 flex items-center justify-center transition hover:scale-105 active:scale-95">
-          ${e}
-        </button>
-      `).join('');
-    }
-
-    function selectAvatar(emoji) {
-      state.avatar = emoji;
-      localStorage.setItem('ka2_avatar', emoji);
+    function selectStudentAvatar(emoji) {
+      quizState.avatar = emoji;
+      localStorage.setItem('kmk_avatar', emoji);
       document.getElementById('userAvatar').textContent = emoji;
       closeStudentProfileModal();
     }
 
-    function renderScoreHistory() {
-      const container = document.getElementById('scoreHistoryList');
-      if (state.scoresHistory.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 text-[11px] text-center py-2">Belum ada riwayat nilai V2.</p>`;
-        return;
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
       }
-
-      container.innerHTML = state.scoresHistory.map(s => `
-        <div class="bg-slate-50 p-2 rounded-xl flex justify-between items-center border border-slate-100">
-          <div>
-            <span class="font-bold text-slate-700">${s.world} (Lvl ${s.level})</span>
-            <p class="text-[10px] text-slate-400">${s.date} • Akurasi: ${s.accuracy}</p>
-          </div>
-          <div class="flex items-center gap-1 font-bold text-emerald-600">
-            <span>+${s.score} pt</span>
-            <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function clearScoreHistory() {
-      state.scoresHistory = [];
-      localStorage.removeItem('ka2_scoresHistory');
-      renderScoreHistory();
-    }
-
-    function copyGasCode() {
-      const code = document.getElementById('gasCodeText').value;
-      navigator.clipboard.writeText(code);
-      alert('Kode Google Apps Script V2 berhasil disalin!');
     }
 
     function triggerConfetti() {
-      const app = document.getElementById('app');
       for (let i = 0; i < 22; i++) {
         const c = document.createElement('div');
         c.className = 'confetti';
-        c.style.left = Math.random() * 100 + '%';
-        c.style.backgroundColor = ['#f59e0b', '#0d9488', '#8b5cf6', '#6366f1'][Math.floor(Math.random() * 4)];
-        app.appendChild(c);
-        setTimeout(() => c.remove(), 2500);
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.backgroundColor = ['#f59e0b', '#0d9488', '#8b5cf6', '#10b981'][Math.floor(Math.random() * 4)];
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 2800);
       }
     }
 
     window.onload = function() {
-      document.getElementById('studentNameText').textContent = state.studentName;
-      document.getElementById('userAvatar').textContent = state.avatar;
-      document.getElementById('coinCount').textContent = state.coins;
-      document.getElementById('streakCount').textContent = `${state.streak} Hari`;
-      applyViewModeUI();
-      switchTab('landing');
+      document.getElementById('studentNameText').textContent = quizState.studentName;
+      document.getElementById('userAvatar').textContent = quizState.avatar;
+      document.getElementById('coinsText').textContent = quizState.coins;
+      showLobbyScreen();
     }
   </script>
 </body>
